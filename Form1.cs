@@ -68,11 +68,6 @@ namespace FileGenerator
 
                 // Displays the MessageBox.
                 result = MessageBox.Show(message, caption, buttons);
-                if (result == System.Windows.Forms.DialogResult.OK)
-                {
-                    // Closes the parent form.
-                    this.Close();
-                }
             }
             else
             {
