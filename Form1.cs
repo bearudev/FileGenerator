@@ -75,6 +75,17 @@ namespace FileGenerator
             }
         }
 
+        private string SetVariables(string contentToCheck, string fileName, string fileExtension)
+        {
+            contentToCheck = contentToCheck.Replace("[filePath]", path);
+
+            contentToCheck = contentToCheck.Replace("[fileName]", fileName);
+
+            contentToCheck = contentToCheck.Replace("[fileExtension]", fileExtension);
+
+            return contentToCheck;
+        }
+
         public void CreateFiles()
         {
             Console.WriteLine("File Creation Started.");
@@ -84,13 +95,29 @@ namespace FileGenerator
 
             if (radioButton1.Checked)
             {
-                quantity = Int32.Parse(richTextBox1.Text);
+                try
+                {
+                    quantity = Int32.Parse(richTextBox1.Text);
+                }
+                catch
+                {
+                    string message = "Please specify a number in the textbox. If you want to name your files. Use the Custom Names mode.";
+                    string caption = "Uh...";
+                    MessageBoxButtons buttons = MessageBoxButtons.OK;
+                    DialogResult result;
+
+                    // Displays the MessageBox.
+                    result = MessageBox.Show(message, caption, buttons);
+                    return;
+                }
                 for (int x = 0; x < quantity; x++)
                 {
                     if (checkBox1.Checked)
                     {
                         FileStream fs = File.Create(path + (x + 1).ToString() + fileExtension);
                         fs.Close();
+                        string txt = SetVariables(richTextBox2.Text, (x + 1).ToString(), fileExtension);
+                        File.WriteAllText(fs.Name, txt);
                     }
                     else
                     {
@@ -98,8 +125,12 @@ namespace FileGenerator
                         {
                             FileStream fs = File.Create(path + (x + 1).ToString() + fileExtension);
                             fs.Close();
+                            string txt = SetVariables(richTextBox2.Text, (x + 1).ToString(), fileExtension);
+                            File.WriteAllText(fs.Name, txt);
                         }
                     }
+                    
+
                 }
             }
             else if (radioButton2.Checked)
@@ -116,6 +147,8 @@ namespace FileGenerator
                         {
                             FileStream fs = File.Create(path + finalName + fileExtension);
                             fs.Close();
+                            string txt = SetVariables(richTextBox2.Text, finalName, fileExtension);
+                            File.WriteAllText(fs.Name, txt);
                         }
                         else
                         {
@@ -123,6 +156,8 @@ namespace FileGenerator
                             {
                                 FileStream  fs = File.Create(path + finalName + fileExtension);
                                 fs.Close();
+                                string txt = SetVariables(richTextBox2.Text, finalName, fileExtension);
+                                File.WriteAllText(fs.Name, txt);
                             }
                         }
                     }
@@ -166,6 +201,11 @@ namespace FileGenerator
             folderBrowserDialog1.ShowDialog();
             path = folderBrowserDialog1.SelectedPath + "\\";
             textBox2.Text = path;
+        }
+
+        private void RichTextBox2_TextChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }
